@@ -5,15 +5,16 @@ export class NewsItem extends Component {
     let { title, description } = this.props;
     return (
       <div>
-        <div class="card" style="width: 18rem;">
-          <img src="..." class="card-img-top" alt="..." />
-          <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">
-              Some quick example text to build on the card title and make up the
-              bulk of the card's content.
-            </p>
-            <a href="#" class="btn btn-primary">
+        <div className="card" style={{ width: "18rem;" }}>
+          <img
+            src="https://content.api.news/v3/images/bin/20cdc019ea6210713f6a0c30dbfcbca7"
+            className="card-img-top"
+            alt="..."
+          />
+          <div className="card-body">
+            <h5 className="card-title">{title}</h5>
+            <p className="card-text">{description}</p>
+            <a href="/newsdetail" className="btn btn-primary">
               Go somewhere
             </a>
           </div>

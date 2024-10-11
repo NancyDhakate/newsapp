@@ -9,7 +9,7 @@ export class NewsItem extends Component {
           <img
             src={
               !imageUrl
-                ? "https://fortune.com/img-assets/wp-content/uploads/2024/10/GettyImages-2154270210-e1728469071550.jpg?resize=1200,600"
+                ? "https://cdn.mos.cms.futurecdn.net/3fNtkpQkWb2Uk9PythAxRo-1200-80.jpg"
                 : imageUrl
             }
             className="card-img-top"

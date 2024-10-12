@@ -63,15 +63,16 @@ export class News extends Component {
   constructor() {
     super();
     this.state = {
-      articles: this.articles,
+      articles: [], // Initialize as an empty array
       loading: false,
       page: 1,
+      totalResults: 0, // Initialize totalResults to 0
     };
   }
+
   async componentDidMount() {
     console.log("cdm");
-    let url =
-      "https://newsapi.org/v2/everything?q=tesla&from=2024-09-12&sortBy=publishedAt&apiKey=2481cd9823de4dfea48dcfda25bfd6e5&page=1&pageSize=18";
+    let url = `https://newsapi.org/v2/everything?q=tesla&from=2024-09-12&sortBy=publishedAt&apiKey=2481cd9823de4dfea48dcfda25bfd6e5&page=1&pageSize=${this.props.pageSize}`;
     let data = await fetch(url);
     let parsedData = await data.json();
     console.log(parsedData);
@@ -84,7 +85,7 @@ export class News extends Component {
     console.log("Previous");
     let url = `https://newsapi.org/v2/everything?q=tesla&from=2024-09-12&sortBy=publishedAt&apiKey=2481cd9823de4dfea48dcfda25bfd6e5&page=${
       this.state.page - 1
-    }&pageSize=18`;
+    }&pageSize=${this.props.pageSize}`;
     let data = await fetch(url);
     let parsedData = await data.json();
     console.log(parsedData);
@@ -96,11 +97,14 @@ export class News extends Component {
   };
   handleNextClick = async () => {
     console.log("Next");
-    if (this.state.page + 1 > Math.ceil(this.totalResults / 18)) {
+    if (
+      this.state.page + 1 >
+      Math.ceil(this.totalResults / this.props.pageSize)
+    ) {
     } else {
       let url = `https://newsapi.org/v2/everything?q=tesla&from=2024-09-12&sortBy=publishedAt&apiKey=2481cd9823de4dfea48dcfda25bfd6e5&page=${
         this.state.page + 1
-      }&pageSize=18`;
+      }&pageSize=${this.props.pageSize}`;
       let data = await fetch(url);
       let parsedData = await data.json();
       console.log(parsedData);
@@ -116,22 +120,29 @@ export class News extends Component {
     console.log("render");
     return (
       <div className="container my-3">
-        <h1>NewsMonkey - Top Headlines</h1>
+        <h1 className="text-center">NewsMonkey - Top Headlines</h1>
+
         <div className="row">
-          {this.state.articles.map((element) => {
-            return (
-              <div className="col-md-4" key={element.url}>
-                <NewsItem
-                  title={element.title ? element.title.slice(0, 45) : ""}
-                  description={
-                    element.description ? element.description.slice(0, 88) : ""
-                  }
-                  imageUrl={element.urlToImage}
-                  newsUrl={element.url}
-                />
-              </div>
-            );
-          })}
+          {this.state.articles && this.state.articles.length > 0 ? (
+            this.state.articles.map((element) => {
+              return (
+                <div className="col-md-4" key={element.url}>
+                  <NewsItem
+                    title={element.title ? element.title.slice(0, 45) : ""}
+                    description={
+                      element.description
+                        ? element.description.slice(0, 88)
+                        : ""
+                    }
+                    imageUrl={element.urlToImage}
+                    newsUrl={element.url}
+                  />
+                </div>
+              );
+            })
+          ) : (
+            <p>No articles available</p> // This can be a loading spinner or message
+          )}
         </div>
         <div className="container d-flex justify-content-between">
           <button
@@ -143,6 +154,10 @@ export class News extends Component {
             &larr; Previous
           </button>
           <button
+            disabled={
+              this.state.page + 1 >
+              Math.ceil(this.state.totalResults / this.props.pageSize)
+            }
             type="button"
             className="btn btn-dark"
             onClick={this.handleNextClick}

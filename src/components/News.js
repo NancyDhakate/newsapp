@@ -65,17 +65,42 @@ export class News extends Component {
     this.state = {
       articles: this.articles,
       loading: false,
+      page: 1,
     };
   }
   async componentDidMount() {
     console.log("cdm");
     let url =
-      "https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=2481cd9823de4dfea48dcfda25bfd6e5";
+      "https://newsapi.org/v2/everything?q=tesla&from=2024-09-12&sortBy=publishedAt&apiKey=2481cd9823de4dfea48dcfda25bfd6e5&page=1";
     let data = await fetch(url);
     let parsedData = await data.json();
     console.log(parsedData);
     this.setState({ articles: parsedData.articles });
   }
+  handlePrevClick = async () => {
+    console.log("Previous");
+    let url = `https://newsapi.org/v2/everything?q=tesla&from=2024-09-12&sortBy=publishedAt&apiKey=2481cd9823de4dfea48dcfda25bfd6e5&page={this.state.page - 1}`;
+    let data = await fetch(url);
+    let parsedData = await data.json();
+    console.log(parsedData);
+
+    this.setState({
+      page: this.state.page - 1,
+      articles: parsedData.articles,
+    });
+  };
+  handleNextClick = async () => {
+    console.log("Next");
+    let url = `https://newsapi.org/v2/everything?q=tesla&from=2024-09-12&sortBy=publishedAt&apiKey=2481cd9823de4dfea48dcfda25bfd6e5&page={this.state.page + 1}`;
+    let data = await fetch(url);
+    let parsedData = await data.json();
+    console.log(parsedData);
+
+    this.setState({
+      page: this.state.page + 1,
+      articles: parsedData.articles,
+    });
+  };
 
   render() {
     console.log("render");
@@ -97,6 +122,23 @@ export class News extends Component {
               </div>
             );
           })}
+        </div>
+        <div className="container d-flex justify-content-between">
+          <button
+            disabled={this.state.page <= 1}
+            type="button"
+            class="btn btn-dark"
+            onClick={this.handlePrevClick}
+          >
+            &larr; Previous
+          </button>
+          <button
+            type="button"
+            class="btn btn-dark"
+            onClick={this.handleNextClick}
+          >
+            Next &rarr;
+          </button>
         </div>
       </div>
     );

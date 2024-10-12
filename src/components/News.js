@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import NewsItem from "./NewsItem";
+import Spinner from "./Spinner";
 
 export class News extends Component {
   articles = [
@@ -73,12 +74,14 @@ export class News extends Component {
   async componentDidMount() {
     console.log("cdm");
     let url = `https://newsapi.org/v2/everything?q=tesla&from=2024-09-12&sortBy=publishedAt&apiKey=2481cd9823de4dfea48dcfda25bfd6e5&page=1&pageSize=${this.props.pageSize}`;
+    this.setState({ loading: true });
     let data = await fetch(url);
     let parsedData = await data.json();
     console.log(parsedData);
     this.setState({
       articles: parsedData.articles,
       totalResults: parsedData.totalResults,
+      loading: false,
     });
   }
   handlePrevClick = async () => {
@@ -86,6 +89,7 @@ export class News extends Component {
     let url = `https://newsapi.org/v2/everything?q=tesla&from=2024-09-12&sortBy=publishedAt&apiKey=2481cd9823de4dfea48dcfda25bfd6e5&page=${
       this.state.page - 1
     }&pageSize=${this.props.pageSize}`;
+    this.setState({ loading: true });
     let data = await fetch(url);
     let parsedData = await data.json();
     console.log(parsedData);
@@ -93,6 +97,7 @@ export class News extends Component {
     this.setState({
       page: this.state.page - 1,
       articles: parsedData.articles,
+      loading: false,
     });
   };
   handleNextClick = async () => {
@@ -105,13 +110,14 @@ export class News extends Component {
       let url = `https://newsapi.org/v2/everything?q=tesla&from=2024-09-12&sortBy=publishedAt&apiKey=2481cd9823de4dfea48dcfda25bfd6e5&page=${
         this.state.page + 1
       }&pageSize=${this.props.pageSize}`;
+      this.setState({ loading: true });
       let data = await fetch(url);
       let parsedData = await data.json();
-      console.log(parsedData);
 
       this.setState({
         page: this.state.page + 1,
         articles: parsedData.articles,
+        loading: false,
       });
     }
   };
@@ -121,7 +127,7 @@ export class News extends Component {
     return (
       <div className="container my-3">
         <h1 className="text-center">NewsMonkey - Top Headlines</h1>
-
+        {!this.state.loading && this.state.loading && <Spinner />}
         <div className="row">
           {this.state.articles && this.state.articles.length > 0 ? (
             this.state.articles.map((element) => {

@@ -5,7 +5,7 @@ export class Navbar extends Component {
   render() {
     return (
       <div>
-        <nav className="navbar navbar-expand-lg bg-body-tertiary navbar-light bg-dark">
+        <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
           <div className="container-fluid">
             <Link className="navbar-brand" to="/">
               NewsMonkey
@@ -31,7 +31,6 @@ export class Navbar extends Component {
                     Home
                   </Link>
                 </li>
-
                 <li className="nav-item">
                   <Link className="nav-link" to="/business">
                     Business
